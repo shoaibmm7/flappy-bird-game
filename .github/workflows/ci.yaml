@@ -1,0 +1,51 @@
+name: Build Pipeline
+on: [ push, pull_request ]
+
+jobs:
+  cfn-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+          architecture: x64
+      - run: pip install cfn-lint
+      - run: cfn-lint cloudformation/*
+
+  deployBucket:
+    needs:
+      - cfn-lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Configure AWS credentials from Test account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
+      - name: Deploy Lambda Bucket
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: flappy-bird-website-bucket
+          template: cloudformation/template-bucket.yaml
+          no-fail-on-empty-changeset: 1
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+          architecture: x64
+      - run: pip install awscli
+      - name: Upload index
+        run: aws s3api put-object --bucket cloudreach-flappy-bird --key index.html --body instructions.html --content-type text/html
+      - run: cd ..; zip -r flappy-bird-tutorial.zip flappy-bird-tutorial -x flappy-bird-tutorial/.git/\* flappy-bird-tutorial/*.md flappy-bird-tutorial/.github/\* flappy-bird-tutorial/cloudformation/\*
+      - name: Upload package
+        run: aws s3api put-object --bucket cloudreach-flappy-bird --key flappy-bird-tutorial.zip --body ../flappy-bird-tutorial.zip
