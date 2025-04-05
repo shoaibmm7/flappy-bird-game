@@ -1,0 +1,282 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Build Flappy Bird</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__left">
+    <div class="stackedit__toc">
+
+<ul>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#setup-your-environment">Setup Your Environment</a></li>
+<li><a href="#build-a-game">Build a Game!</a>
+<ul>
+<li><a href="#part-1---drawing-the-game-on-the-screen">Part 1 - Drawing the game on the screen</a></li>
+<li><a href="#part-2---movement">Part 2 - Movement</a></li>
+<li><a href="#part-3---collisions">Part 3 - Collisions</a></li>
+<li><a href="#part-4---score">Part 4 - Score</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+  </div>
+  <div class="stackedit__right">
+    <div class="stackedit__html">
+      <h1 id="prerequisites">Prerequisites</h1>
+<ul>
+<li>Open Terminal - instructions can be found <a href="https://support.apple.com/en-gb/guide/terminal/apd5265185d-f365-44cb-8b09-71a064a42125/mac" target="_blank">here</a></li>
+<li>Install HomeBrew by running this command in your terminal <code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></li>
+<li>Close and reopen terminal</li>
+<li>Install Python3 by running the command <code>brew install python</code> from your terminal. Terminal is available from your installed apps.</li>
+<li>Install a text editor such as <a href="https://atom.io/" target="_blank">Atom</a> or <a href="https://www.sublimetext.com/" target="_blank">Sublime text</a></li>
+<li>Install virtualenv by running <code>python3 -m pip install --user virtualenv</code>  in the terminal</li>
+</ul>
+<h1 id="setup-your-environment">Setup Your Environment</h1>
+<p>Download <a href="http://cloudreach-flappy-bird.s3-website-eu-west-1.amazonaws.com/flappy-bird-tutorial.zip" target="_blank">this</a> file and unzip it.</p>
+<p>Once unzipped open the directory created in atom or sublime by going to file-&gt;open directory and finding the folder in the top left-hand corner of the menu bar.</p>
+<p>Also open a terminal by right-clicking on the folder where these instructions are and select <code>open terminal at folder</code>.</p>
+<p><img src="https://cdn.shortpixel.ai/spai/w_700+q_lossy+ret_img+to_webp/https://ladedu.com/wp-content/uploads/2020/07/Open-a-Mac-Terminal-window-from-Finder-at-the-selected-folder.png" alt="Open Terminal"></p>
+<p>In the terminal you will also need to set up a virtual python environment.<br>
+<code>python3 -m venv venv &amp;&amp; source venv/bin/activate</code></p>
+<p>Install requirements for game by running<br>
+<code>pip install -r requirements.txt &amp;&amp; source venv/bin/activate</code></p>
+<h1 id="build-a-game">Build a Game!</h1>
+<p>We are using a framework called pygame zero. This will allow us to create a game easily with the various functions already implemented.</p>
+<h2 id="part-1---drawing-the-game-on-the-screen">Part 1 - Drawing the game on the screen</h2>
+<p>A part of pygame zero has a draw function (also known as a hook) defined <a href="https://pygame-zero.readthedocs.io/en/stable/hooks.html#draw" target="_blank">here</a>.<br>
+This is in charge of drawing images also known as sprites on the screen.</p>
+<p>The sprites have already been provided in the images directory.</p>
+<ol>
+<li>
+<p>Create and save a file called <code>flappybird.py</code> in the same directory that got created after unzipping - The <code>.py</code> extension denotes that the file is a python based script.</p>
+</li>
+<li>
+<p>In the file add the following lines</p>
+</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python">TITLE <span class="token operator">=</span> <span class="token string">'Flappy Bird'</span> <span class="token comment"># Name in the Window  </span>
+<span class="token comment"># Size of the Window in pixels  </span>
+WIDTH <span class="token operator">=</span> <span class="token number">400</span>
+HEIGHT <span class="token operator">=</span> <span class="token number">708</span>
+</code></pre>
+<ol start="3">
+<li>Add the following code at the bottom of your file.</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">draw</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+ screen<span class="token punctuation">.</span>blit<span class="token punctuation">(</span><span class="token string">'background'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Now run the app by executing the following command in your terminal</p>
+<pre class=" language-bash"><code class="prism  language-bash">pgzrun flappybird.py
+</code></pre>
+<p>You should now see a window with an image inside it.</p>
+<p>Next lets add the bird onto the screen!</p>
+<ol start="4">
+<li>
+<p>Add <code>bird = Actor('bird1', (75, 350))</code> to the bottom of the file, there should be no indentation at all.<br>
+This line sets up an Actor, which is essentially an object that has the ability to interact with user actions and also other Actors.</p>
+</li>
+<li>
+<p>In the draw function add the following line. <code>bird.draw()</code>. Your function should look like this now:</p>
+</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">draw</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+   screen<span class="token punctuation">.</span>blit<span class="token punctuation">(</span><span class="token string">'background'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+   bird<span class="token punctuation">.</span>draw<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Run the application again.</p>
+<p>This screen should look like this</p>
+<p><img src="https://pygamezero-bird.readthedocs.io/en/latest/_images/background_and_bird.png" alt="Screen"></p>
+<ol start="6">
+<li>Let’s draw two pipes on the screen now. Add them to the bottom of your file.</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python">top_pipe <span class="token operator">=</span> Actor<span class="token punctuation">(</span><span class="token string">'top'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">300</span><span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+bottom_pipe <span class="token operator">=</span> Actor<span class="token punctuation">(</span><span class="token string">'bottom'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">300</span><span class="token punctuation">,</span><span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Remember to add them to the draw function as well</p>
+<pre class=" language-python"><code class="prism  language-python">top_pipe<span class="token punctuation">.</span>draw<span class="token punctuation">(</span><span class="token punctuation">)</span>
+bottom_pipe<span class="token punctuation">.</span>draw<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Now run the application.</p>
+<p><strong>UH oh!</strong> there’s no gap for the bird to fly through.<br>
+We fix this by dynamically setting a variable to create a gap. Replace the lines where you set the pipe actors with the following:</p>
+<pre class=" language-python"><code class="prism  language-python">gap <span class="token operator">=</span> <span class="token number">140</span>
+top_pipe <span class="token operator">=</span> Actor<span class="token punctuation">(</span><span class="token string">'top'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">300</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+bottom_pipe <span class="token operator">=</span> Actor<span class="token punctuation">(</span><span class="token string">'bottom'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">300</span><span class="token punctuation">,</span> top_pipe<span class="token punctuation">.</span>height <span class="token operator">+</span> gap<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Run it again, you should see a gap where the bird can fly through!</p>
+<h2 id="part-2---movement">Part 2 - Movement</h2>
+<p>Let’s add an interaction with the mouse.<br>
+All Actor objects have a variety of properties that you can assign to them. Some default properties are x and y co-ordinates.</p>
+<h3 id="flying">Flying</h3>
+<ol>
+<li>Get the bird to move up on the click of the left button</li>
+</ol>
+<p>Let’s add the following code</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">on_mouse_down</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+   <span class="token comment"># By default this is the left mouse button</span>
+   bird<span class="token punctuation">.</span>y <span class="token operator">-=</span> <span class="token number">50</span>
+</code></pre>
+<p>Now lets run the app and test this.</p>
+<p>You will see that on each click the bird will move up 50 pixels.</p>
+<p>But it looks a bit weird and the bird now doesn’t come back down.<br>
+If we want to make the bird move smoothly we need to move him in small amounts, and do it so often that it looks smooth.</p>
+<ol start="2">
+<li>Add a property called speed to bird. This should be on the line after defining the bird object.</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python">bird <span class="token operator">=</span> Actor<span class="token punctuation">(</span><span class="token string">'bird1'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token number">75</span><span class="token punctuation">,</span> <span class="token number">350</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+bird<span class="token punctuation">.</span>speed <span class="token operator">=</span> <span class="token number">1</span>
+
+</code></pre>
+<ol start="3">
+<li>An update function is a function that gets called again and again very quickly. Normally 60 times in every second. Here we’ll add the speed to the y co-ordinate<br>
+to bring the bird back down at a steady rate.</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">update</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+ bird<span class="token punctuation">.</span>y <span class="token operator">+=</span> bird<span class="token punctuation">.</span>speed
+</code></pre>
+<h3 id="moving-forward">Moving forward</h3>
+<p>Now we’re going to concentrate on movement, but we’re not going to be updating the <code>bird</code> object.</p>
+<ol>
+<li>Define a variable called <code>scroll_speed</code> at the bottom of the file and give it the value of <code>1</code>.</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python">scroll_speed <span class="token operator">=</span> <span class="token number">1</span>
+</code></pre>
+<ol start="2">
+<li>Now we’re going to move the two pipes by that scroll speed but on the x-axis. You’ll want to add the following lines to your <code>update</code> function.</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python">top_pipe<span class="token punctuation">.</span>x <span class="token operator">-=</span> scroll_speed
+bottom_pipe<span class="token punctuation">.</span>x <span class="token operator">-=</span> scroll_speed
+</code></pre>
+<p>Notice that we’re negating the scroll speed.</p>
+<p>Now let’s run the Application.</p>
+<ol start="3">
+<li>Let’s get the pipes to repeat now so once they’re off the screen, they get recreated at different positions. We will want to recreate when the right side of the pipe is less than <code>0</code>.</li>
+</ol>
+<p>To do this we add the following to the <code>update</code> function.</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">if</span> top_pipe<span class="token punctuation">.</span>right <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">:</span>
+   offset <span class="token operator">=</span> random<span class="token punctuation">.</span>randint<span class="token punctuation">(</span><span class="token number">150</span><span class="token punctuation">,</span> HEIGHT <span class="token operator">-</span> <span class="token number">150</span><span class="token punctuation">)</span>
+   top_pipe<span class="token punctuation">.</span>midbottom <span class="token operator">=</span> <span class="token punctuation">(</span>WIDTH<span class="token punctuation">,</span> offset<span class="token punctuation">)</span>
+   bottom_pipe<span class="token punctuation">.</span>midbottom <span class="token operator">=</span> <span class="token punctuation">(</span>WIDTH<span class="token punctuation">,</span> offset <span class="token operator">+</span> top_pipe<span class="token punctuation">.</span>height <span class="token operator">+</span> gap<span class="token punctuation">)</span>
+</code></pre>
+<p>You’ll notice random has been added. To use the random library, you’ll need to add <code>import random</code> as the first line of the file.</p>
+<p>Now let’s run the application. We have looping pipes which gives us the illusion of moving forward in the game.</p>
+<p>On click our bird moves 50px up, but still it’s not 100% smooth on a click, it feels like the bird is teleported up. Let’s add gravity to the game.</p>
+<ol start="4">
+<li>On a mouse click we are going to change the <code>speed</code> property to a fixed number. Update <code>on_mouse_down</code> to reflect what is shown below</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">on_mouse_down</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+   bird<span class="token punctuation">.</span>speed <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">6.5</span>
+</code></pre>
+<ol start="5">
+<li>Create a variable at the end of your file called <code>gravity</code> and assign it the value of <code>0.3</code></li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python">gravity <span class="token operator">=</span> <span class="token number">0.3</span>
+</code></pre>
+<ol start="6">
+<li>Finally, let’s add gravity to the <code>speed</code> property in the <code>update</code> function, by adding this as the first line of the function.</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python">bird<span class="token punctuation">.</span>speed <span class="token operator">+=</span> gravity
+</code></pre>
+<h3 id="animation">Animation</h3>
+<p>Let’s make the bird flap now.</p>
+<p>In the update function lets add the following</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">if</span> bird<span class="token punctuation">.</span>speed <span class="token operator">&gt;</span> <span class="token number">0</span><span class="token punctuation">:</span>
+ bird<span class="token punctuation">.</span>image <span class="token operator">=</span> <span class="token string">"bird1"</span>
+<span class="token keyword">else</span><span class="token punctuation">:</span>
+ bird<span class="token punctuation">.</span>image <span class="token operator">=</span> <span class="token string">"bird0"</span>
+</code></pre>
+<p>This changes the image of the bird dependent on the speed. So when we click, the image of the bird is the bird1.png image otherwise it’s bird0.png image</p>
+<p>Test it out! you should be at a point where you are able to see the bird flapping, and also have the illusion of moving forward.</p>
+<h2 id="part-3---collisions">Part 3 - Collisions</h2>
+<p>Now we need to handle collisions which should be the following.</p>
+<p>Going off the screen or hitting a pipe!</p>
+<p>First lets start with a function to handle resetting the game.</p>
+<ol>
+<li>Add a function just after <code>on_mouse_down</code> called <code>reset</code>. This should reset the speed and position of the bird. Also reset the position of the pipes.</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">reset</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+   bird<span class="token punctuation">.</span>speed <span class="token operator">=</span> <span class="token number">1</span>
+   bird<span class="token punctuation">.</span>center <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">75</span><span class="token punctuation">,</span> <span class="token number">350</span><span class="token punctuation">)</span>
+   bird<span class="token punctuation">.</span>alive <span class="token operator">=</span> <span class="token boolean">True</span>
+   top_pipe<span class="token punctuation">.</span>center <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">300</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">)</span>
+   bottom_pipe<span class="token punctuation">.</span>center <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token number">300</span><span class="token punctuation">,</span> top_pipe<span class="token punctuation">.</span>height <span class="token operator">+</span> gap<span class="token punctuation">)</span>
+</code></pre>
+<ol start="2">
+<li>Add to the <code>update</code> a condition to check that the bird of the height is not greater than the height or less than 0.<br>
+It should look something like this.</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">if</span> bird<span class="token punctuation">.</span>y <span class="token operator">&gt;</span> HEIGHT <span class="token operator">or</span> bird<span class="token punctuation">.</span>y <span class="token operator">&lt;</span> <span class="token number">0</span><span class="token punctuation">:</span>
+   reset<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<ol start="3">
+<li>Let’s also call this function as the last line of the file.</li>
+</ol>
+<p>Let’s test this again. You’re game should reset all that’s been defined when you are beyond the windows limits.</p>
+<p>Now let’s handle colliding with the pipes.</p>
+<ol start="4">
+<li>Let’s add a function to run when hitting a pipe.</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">hit_pipe</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+   <span class="token keyword">print</span><span class="token punctuation">(</span><span class="token string">"Hit pipe!"</span><span class="token punctuation">)</span>
+   bird<span class="token punctuation">.</span>image <span class="token operator">=</span> <span class="token string">"birddead"</span>
+   bird<span class="token punctuation">.</span>alive <span class="token operator">=</span> <span class="token boolean">False</span>
+</code></pre>
+<ol start="5">
+<li>In the <code>update</code> function we are going to detect collisions. Luckily pygame zero has in build collision functions.<br>
+We can add the following lines to handle this.</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">if</span> bird<span class="token punctuation">.</span>colliderect<span class="token punctuation">(</span>top_pipe<span class="token punctuation">)</span> <span class="token operator">or</span> bird<span class="token punctuation">.</span>colliderect<span class="token punctuation">(</span>bottom_pipe<span class="token punctuation">)</span><span class="token punctuation">:</span>
+   hit_pipe<span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Let’s test this and see.</p>
+<p>When we hit the pipe the image changes but just for a moment, and we can still fly.<br>
+We need to make two changes.</p>
+<ol start="6">
+<li>First is in the <code>on_mouse_down</code> function. Where we’re only going to allow the speed to change, if the bird is alive.</li>
+</ol>
+<p>The function should look like this now.</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">def</span> <span class="token function">on_mouse_down</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+   <span class="token keyword">if</span> bird<span class="token punctuation">.</span>alive<span class="token punctuation">:</span>
+     bird<span class="token punctuation">.</span>speed <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">6.5</span>
+</code></pre>
+<ol start="7">
+<li>Second is updating the image, the image should only change if the bird is alive as well.</li>
+</ol>
+<h2 id="part-4---score">Part 4 - Score</h2>
+<p>Nearly there, last bit is to add a score to the screen.</p>
+<ol>
+<li>Let’s assign a score to the bird in the reset function. Add these line to the <code>reset</code> function</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python">bird<span class="token punctuation">.</span>score <span class="token operator">=</span> <span class="token number">0</span> <span class="token comment"># This will hold the points  </span>
+top_pipe<span class="token punctuation">.</span>pair_number <span class="token operator">=</span> <span class="token number">1</span> <span class="token comment"># This is number value pair of pipes that have been passed.  </span>
+</code></pre>
+<ol start="2">
+<li>Let’s add to the draw function the score to come on the screen. You will need to add the following to the <code>draw</code> function</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python">screen<span class="token punctuation">.</span>draw<span class="token punctuation">.</span>text<span class="token punctuation">(</span>
+ <span class="token builtin">str</span><span class="token punctuation">(</span>bird<span class="token punctuation">.</span>score<span class="token punctuation">)</span><span class="token punctuation">,</span> color<span class="token operator">=</span><span class="token string">'white'</span><span class="token punctuation">,</span> midtop <span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">20</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">,</span> fontsize<span class="token operator">=</span><span class="token number">70</span><span class="token punctuation">,</span> <span class="token punctuation">)</span>
+</code></pre>
+<ol start="3">
+<li>Finally, lets increment the score in the <code>update</code> function. First we need to adjust the <code>pair_number</code> property and add this to the<br>
+conditional block where we loop the pipes.</li>
+</ol>
+<pre class=" language-python"><code class="prism  language-python">top_pipe<span class="token punctuation">.</span>pair_number <span class="token operator">+=</span> <span class="token number">1</span>
+</code></pre>
+<p>Finally, we want to add this condition after the collision detection.</p>
+<pre class=" language-python"><code class="prism  language-python"><span class="token keyword">if</span> top_pipe<span class="token punctuation">.</span>right <span class="token operator">&lt;</span> bird<span class="token punctuation">.</span>x<span class="token punctuation">:</span>
+ bird<span class="token punctuation">.</span>score <span class="token operator">=</span> top_pipe<span class="token punctuation">.</span>pair_number
+</code></pre>
+<p>Now you can test this and your game is complete!</p>
+
+    </div>
+  </div>
+</body>
+
+</html>
